@@ -1,13 +1,77 @@
 ---
-title: "Post With Code"
+title: "Hot Ones"
 author: "Abby Sikora"
-date: "2024-01-31"
+date: "2024-02-08"
 categories: [news, code, analysis]
-image: "image.jpg"
+execute:
+  warning: false
 ---
 
-This is a post with executable code.
+Introduction:
+The data set I'm working with is data collected from the show Hot One's, where typically a celebrity contestant goes into an informal sit down interview and as they're being interviewed they have a wing they need to eat. With each round of questioning the sauce on the wing gets hotter until the last sauce, which is extremely hot, all while still answering questions.
+
+The variables I'm most interested in are sauce_name and scoville, but also separately guest and finished.
+
+sauce_name - Type of Hot sauce used from 1-10, with each number representing a different brand of hot sauce
+
+scoville - number representing how hot the sauce is based on the Scoville Scale, with values ranging from Mild (0 - 2,500), Medium (2,500 to 30,000), Hot (30,000 to 100,000), Extra Hot (100,000 to 300,000) and Extremely Hot (above 300,000)
+
+guest - name of the celebrity guest
+
+finished - whether the guest finished all 10 wings or not
+
+The question I will be exploring is do the super hot sauces affect a guests ability to finish all 10 wings? How many guests were able to finish and what can we see about the different sauces?
+
+I got the data from the tidytuesday repository on github at this link : https://github.com/rfordatascience/tidytuesday
 
 ```{r}
-1 + 1
+library(tidyverse)
+
+episodes <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-08-08/episodes.csv')
+sauces <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-08-08/sauces.csv')
+
+hot_ones <- full_join(sauces, episodes) 
 ```
+
+First, I'd like to explore the proportion of guests who were able to finish all 10 wings by finding the count of TRUE's in the finished variable and seeing it in a table. 
+
+```{r}
+library(pander)
+
+hot_ones_finished <- hot_ones |> 
+  mutate(count = case_when(finished == "TRUE" ~ 1,
+                           finished == "FALSE" ~ 0)) |>
+  select(finished, count, guest) |>
+  mutate(total_finish = sum(count)) |>
+  group_by(count) |>
+  summarize(n()) |>
+  ungroup() |>
+  mutate(prop_finished = 2850/ (2850 + 150)) |>
+  mutate(prop_unfinished = 150 / (2850+150)) |>
+  mutate(count = case_when(count == 0 ~ "No",
+                           count == 1 ~ "Yes")) |>
+  select(prop_finished, prop_unfinished) |>
+  slice(2) |>
+  pander()
+```
+
+Next, I will be looking at the name of the sauce and scoville level only for season 1 to gauge the difference in spice between each wing. To do this I will start off with a bar plot showing the difference between spice levels. 
+
+```{r}
+season_1_sauce <- sauces |> slice(1:10) |>
+  mutate(sauce_name = fct_reorder(sauce_name, scoville))
+
+ggplot(data = season_1_sauce, aes(x = sauce_name, y = scoville)) +
+  geom_col(color = "darkblue", fill = "lightblue") +
+  coord_flip() +
+  theme_minimal()
+```
+From this visualization, we can see that the sauces don't equally go up in spice as the number of wings progresses to 10, but there is more of an exponential growth once we reach somewhere around the 7th sauce.
+
+These two findings are interesting to compare, showing a majority of the contestants were able to finish with a .95 proportion of TRUE's within the `finished` variable. Not shown in my visualizations, but within the data the spiciness for each sauce per season actually goes up to getting progressively hotter sauces per season. To dive further into this comparison and with more time, I would go through each season and see if the proportion of finishing decreases increase or stays the same keeping in mind that the sauces have gotten hotter in more recent seasons, and possibly make the same bar plot I made above for each season and compare the increasing nature of scoville between the new hot sauces.
+
+These visuals are effective ways to communicate information because the table shows calculated proportions I did which just comes simply down to equations which you can see in the code. The plot effectively shows the level of spiciness between sauces, and the descending nature of the bars makes it easy to see trends between sauces. 
+
+
+
+

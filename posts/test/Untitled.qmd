@@ -6,6 +6,8 @@ categories: [news, code, analysis]
 ---
 
 ```{r}
+
+#/ warning: false
 library(palmerpenguins)
 library(tidyverse)
 
