@@ -38,7 +38,7 @@ First, I'd like to explore the proportion of guests who were able to finish all 
 ```{r}
 library(pander)
 
-hot_ones_finished <- hot_ones |> 
+hot_ones |> 
   mutate(count = case_when(finished == "TRUE" ~ 1,
                            finished == "FALSE" ~ 0)) |>
   select(finished, count, guest) |>
@@ -53,6 +53,8 @@ hot_ones_finished <- hot_ones |>
   select(prop_finished, prop_unfinished) |>
   slice(2) |>
   pander()
+
+
 ```
 
 Next, I will be looking at the name of the sauce and scoville level only for season 1 to gauge the difference in spice between each wing. To do this I will start off with a bar plot showing the difference between spice levels. 
