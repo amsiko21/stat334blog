@@ -17,3 +17,6 @@ about:
 ---
 
 About this blog
+
+Hi! My name is Abby Sikora and I am a student at St. Lawrence University studying Statistics and Data Science. This is my blog showing different explorations I make on different data sets I've chosen throughout my spring semester as a junior. 
+Enjoy!
