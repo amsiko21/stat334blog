@@ -105,8 +105,9 @@ summary_south_carolina <- sc_stats |>
 
 combined_summary <- bind_rows(
   mutate(summary_iowa, Team = "Iowa"),
-  mutate(summary_south_carolina, Team = "South Carolina")) |>
-  pander()
+  mutate(summary_south_carolina, Team = "South Carolina")) 
+
+combined_summary |> pander()
 ```
 
 From this table, we see that out of the starters and possible subs, Iowa has 60.2 more points on average for the season than South Carolina. Let's see the breakdown of scorers on each team.
