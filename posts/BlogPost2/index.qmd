@@ -32,13 +32,18 @@ historical_spending1 <- read_csv(here("data/historical_spending.csv"))
 #Visualizing Overall trend in Celebration
 
 ```{r}
-ggplot(data = historical_spending1, aes(x = Year,
-                                       y = PercentCelebrating)) +
+library(plotly)
+
+plot_1 <- ggplot(data = historical_spending1, aes(x = Year,
+                                       y = PercentCelebrating,
+                                       label = PerPerson)) +
   geom_line(colour = "magenta") +
   theme(plot.background = element_rect(fill = "pink"),
         axis.text = element_text(colour = "pink4", size = rel(1))) +
   labs(title = "Valentines Day Celebration",
        y = "Percent Celebrating")
+
+ggplotly(plot_1, tooltip = "label")
 ```
 
 As we can see from this plot, the percent of people celebrating Valentine's Day based on data collected from the National Retail Federation has gone down since 2010, especially around the end of 2012 to 2014 where we see the percentage take a significant drop to below 55%, and furthermore the poin in 2019 drops to below 50%.
